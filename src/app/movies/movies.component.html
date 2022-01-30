@@ -1,0 +1,77 @@
+
+<div style="display: flex; flex-direction: row; width: 100%; margin-left: 20px; justify-content: space-between">
+  <div class="search" style="width: 60%">
+    <input class="form-control" type="text" name="search" [(ngModel)]="searchText" autocomplete="off"
+           placeholder="search title movie" style="height: 40px;  margin: 5px; background-color: #fbb260">
+  </div>
+
+  <div style="width: 15%">
+    <select [(ngModel)]="genre" (change)="onChangeGenre($event)" [compareWith]="compareFn" style="height: 40px; margin: 5px; border-radius: 4px; background-color: #fbb260">
+      <option [ngValue]="{id:0, name:''}" >genre</option>
+      <option [ngValue]="genre" *ngFor="let genre of genres">{{genre.name}}</option>
+    </select>
+  </div>
+
+  <div style="width: 15%">
+    <select [(ngModel)]="year" (change)="onChangePremiere($event)" [compareWith]="compareFn" style="height: 40px; margin: 5px; border-radius: 4px; background-color: #fbb260">
+      <option [value]="''" >premiere</option>
+      <option [value]="year" *ngFor="let year of years">{{year}}</option>
+    </select>
+  </div>
+</div>
+
+<table class="table " id="owners" *ngIf="movies" style="margin-left: 20px; width: 95%">
+  <thead style="background-color: darkorchid">
+  <tr>
+   <!-- <th scope="col">#</th>-->
+    <th scope="col"><div style="display: flex; flex-direction: row">
+      Name <div style="display: flex; flex-direction: column"><button (click)="titleSortUp()"><i class="fa fa-sort-asc"></i></button>
+      <button (click)="titleSortDown()"><i class="fa fa-sort-desc"></i></button></div>
+    </div></th>
+    <th scope="col"><div style="display: flex; flex-direction: row">
+      Score <div style="display: flex; flex-direction: column"><button (click)="raitingSortUp()"><i class="fa fa-sort-asc"></i></button>
+      <button (click)="raitingSortDown()"><i class="fa fa-sort-desc"></i></button></div>
+    </div></th>
+    <th scope="col">Countries</th>
+    <th scope="col"><div style="display: flex; flex-direction: row">
+      Premiere<div style="display: flex; flex-direction: column"><button (click)="dataSortUp()"><i class="fa fa-sort-asc"></i></button>
+      <button (click)="dataSortDown()"><i class="fa fa-sort-desc"></i></button></div>
+    </div></th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr  *ngFor="let movie of movies | searchMovies: searchText | paginate: { itemsPerPage: itemsPerPage, currentPage: p } " class="table-light">
+    <!--<td>{{movie.id}}</td>-->
+    <td>
+      <div style="display: flex; flex-direction: row">
+
+        <div><img style="width: 50px; height: 100px" src="{{movie.poster_path}}" ></div>
+        <div>
+          <div>{{movie.original_name}}</div>
+          <div>{{movie.overview}}</div>
+          <div *ngFor="let genre_id of movie.genre_ids" >
+            <div *ngFor="let genre of genres">
+            <div *ngIf="genre_id==this.genre.id">{{genre.name}}</div>
+          </div>
+          </div>
+        </div>
+
+      </div>
+    </td>
+    <td>{{movie.vote_average}}</td>
+    <td>{{movie.origin_country}}</td>
+    <td>{{movie.first_air_date}}</td>
+  </tr>
+  </tbody>
+</table>
+
+
+<div>found <span>{{(movies| searchMovies: searchText)?.length}}</span> movies</div>
+
+<select class="form-select" aria-label="Default select example" [(ngModel)]="itemsPerPage">
+  <option [value]="5">5</option>
+  <option [value]="10">10</option>
+  <option [value]=15>15</option>
+</select>
+
+<pagination-controls (pageChange)="p=($event)"></pagination-controls>
