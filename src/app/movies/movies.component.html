@@ -1,7 +1,7 @@
 
 <div style="display: flex; flex-direction: row; width: 100%; margin-left: 20px; justify-content: space-between">
   <div class="search" style="width: 60%">
-    <input class="form-control" type="text" name="search" [(ngModel)]="searchText" autocomplete="off"
+    <input class="form-control" type="text" name="search" [(ngModel)]="searchText" autocomplete="off" (change)="onChangeSearch($event)"
            placeholder="search title movie" style="height: 40px;  margin: 5px; background-color: #fbb260">
   </div>
 

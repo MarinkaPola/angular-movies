@@ -127,4 +127,8 @@ export class MoviesComponent implements OnInit {
       return new Date(a.first_air_date).getTime() - new Date(b.first_air_date).getTime();
     });
   }
+
+  onChangeSearch(optionsValue: any) {
+    this.p = 1;
+  }
 }
