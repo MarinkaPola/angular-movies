@@ -21,21 +21,21 @@
 </div>
 
 <table class="table " id="owners" *ngIf="movies" style="margin-left: 20px; width: 95%">
-  <thead style="background-color: darkorchid">
+  <thead style="background-color: #ab80cc;">
   <tr>
    <!-- <th scope="col">#</th>-->
-    <th scope="col"><div style="display: flex; flex-direction: row">
-      Name <div style="display: flex; flex-direction: column"><button (click)="titleSortUp()"><i class="fa fa-sort-asc"></i></button>
-      <button (click)="titleSortDown()"><i class="fa fa-sort-desc"></i></button></div>
+    <th scope="col"><div style="display: flex; flex-direction: row; align-items: center">
+      Name <div style="display: flex; flex-direction: column"><button (click)="titleSortUp()" style="background-color: transparent; border: none"><i class="fa fa-sort-asc"></i></button>
+      <button (click)="titleSortDown()" style="background-color: transparent; border-style: none"><i class="fa fa-sort-desc"></i></button></div>
     </div></th>
-    <th scope="col"><div style="display: flex; flex-direction: row">
-      Score <div style="display: flex; flex-direction: column"><button (click)="raitingSortUp()"><i class="fa fa-sort-asc"></i></button>
-      <button (click)="raitingSortDown()"><i class="fa fa-sort-desc"></i></button></div>
+    <th scope="col"><div style="display: flex; flex-direction: row; align-items: center">
+      Score <div style="display: flex; flex-direction: column"><button (click)="raitingSortUp()" style="background-color: transparent; border-style: none"><i class="fa fa-sort-asc"></i></button>
+      <button (click)="raitingSortDown()" style="background-color: transparent; border-style: none"><i class="fa fa-sort-desc"></i></button></div>
     </div></th>
-    <th scope="col">Countries</th>
-    <th scope="col"><div style="display: flex; flex-direction: row">
-      Premiere<div style="display: flex; flex-direction: column"><button (click)="dataSortUp()"><i class="fa fa-sort-asc"></i></button>
-      <button (click)="dataSortDown()"><i class="fa fa-sort-desc"></i></button></div>
+    <th scope="col" style="vertical-align: middle">Countries</th>
+    <th scope="col"><div style="display: flex; flex-direction: row; align-items: center">
+      Premiere<div style="display: flex; flex-direction: column"><button (click)="dataSortUp()" style="background-color: transparent; border-style: none"><i class="fa fa-sort-asc"></i></button>
+      <button (click)="dataSortDown()" style="background-color: transparent; border-style: none"><i class="fa fa-sort-desc"></i></button></div>
     </div></th>
   </tr>
   </thead>
