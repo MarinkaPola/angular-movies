@@ -1,7 +1,8 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {Subscription} from 'rxjs';
 import {MoviesService} from './movies.service';
 import {Genre, Movie} from '../interface';
+import {concatMap, map} from 'rxjs/operators';
 
 @Component({
   selector: 'app-movies',
@@ -21,7 +22,7 @@ export class MoviesComponent implements OnInit {
   year: Date | string = '';
   years: number[] = [];
   itemsPerPage = 10;
-
+  private moviesRem!: Movie[];
 
 
   generateArrayOfYears() {
@@ -40,36 +41,23 @@ export class MoviesComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.getNewMovies();
+    // this.getNewMovies();
     this.getGenres();
   }
 
-  getNewMovies() {
-    this.Sub = this.moviesService.getMovies().subscribe(data => {
-        this.movies = data;
-        console.log(data);
-        console.log(this.genre);
-        if (this.genre && (this.genre.id > 0 )) {
-          this.movies = this.movies.filter((movie) => {
-            return (movie.genre_ids.indexOf(this.genre.id) >= 0);
-          }); console.log(this.movies);
-        }
-        console.log(this.year);
-        if (this.year) {
-          this.movies = this.movies.filter(movie => new Date(movie.first_air_date).getFullYear() === new Date(this.year).getFullYear());
-          console.log(this.movies);
-        }
-      },
-
-      error => {
-        this.error = error.message;
-        console.log(error);
-      }, );
-  }
 
   getGenres() {
-    this.SubG = this.moviesService.getGenres().subscribe(data => {
-        this.genres = data;
+    this.SubG = this.moviesService.getGenres().pipe(concatMap((v) => {
+      return this.moviesService.getMovies().pipe(
+        map(resp => ({
+          data_genres: v,
+          data_movies: resp
+        }))
+      );
+    })).subscribe(data => {
+        this.genres = data.data_genres;
+        this.movies = data.data_movies;
+        this.moviesRem = data.data_movies;
         console.log(data);
       },
       error => {
@@ -79,21 +67,58 @@ export class MoviesComponent implements OnInit {
     );
   }
 
+  /*getNewMovies() {
+    this.Sub = this.moviesService.getMovies().subscribe(data => {
+        console.log(data);
+        console.log(this.genre);
+        console.log(this.year);
+        console.log(this.moviesRem);
+        this.movies = data;
+        this.moviesRem = data;
+      },
+
+      error => {
+        this.error = error.message;
+        console.log(error);
+      },
+    );
+    return this.movies;
+  }
+*/
   onChangeGenre(optionsValue: any) {
     this.p = 1;
-    this.getNewMovies();
+
+    if (this.genre && (this.genre.id > 0)) {
+      this.movies = this.movies.filter((movie) => {
+        return (movie.genre_ids.indexOf(this.genre.id) >= 0);
+      });
+      console.log(this.movies);
+    } else {
+      this.movies = this.moviesRem;
+    }
+    return this.movies;
+  }
+
+  onChangeSearch(optionsValue: any) {
+    this.p = 1;
+  }
+
+  onChangePremiere(optionsValue: any) {
+    this.p = 1;
+    console.log(this.year);
+    if (this.year) {
+      this.movies = this.movies.filter(movie => new Date(movie.first_air_date).getFullYear() === new Date(this.year).getFullYear());
+      console.log(this.movies);
+    } else {
+      this.movies = this.moviesRem;
+    }
+    return this.movies;
   }
 
   compareFn(c1: any, c2: any): boolean {
     return c1 && c2
       ? c1.sortBy === c2.sortBy && c1.sortOrder === c2.sortOrder
       : c1 === c2;
-  }
-
-
-  onChangePremiere(optionsValue: any) {
-    this.p = 1;
-    this.getNewMovies();
   }
 
   raitingSortDown() {
@@ -128,7 +153,5 @@ export class MoviesComponent implements OnInit {
     });
   }
 
-  onChangeSearch(optionsValue: any) {
-    this.p = 1;
-  }
+
 }
