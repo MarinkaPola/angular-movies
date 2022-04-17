@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {Subscription} from 'rxjs';
 import {MoviesService} from './movies.service';
 import {Genre, Movie} from '../interface';
@@ -9,8 +9,7 @@ import {concatMap, map} from 'rxjs/operators';
   templateUrl: './movies.component.html',
   styleUrls: ['./movies.component.css']
 })
-export class MoviesComponent implements OnInit {
-  private Sub!: Subscription;
+export class MoviesComponent implements OnInit, OnDestroy {
   private error: any;
   movies!: Movie[];
   p = 1;
@@ -153,5 +152,9 @@ export class MoviesComponent implements OnInit {
     });
   }
 
-
+  ngOnDestroy() {
+    if (this.SubG) {
+      this.SubG.unsubscribe();
+    }
+  }
 }
